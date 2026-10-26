@@ -1,0 +1,11 @@
+main {
+  max-width: calc(8rem + 65ch);
+  margin: 0 auto;
+  padding: 4rem;
+  background: #ddd;
+  min-height: 100dvh;
+
+  @media (prefers-color-scheme: dark) {
+    background: #222;
+  }
+}

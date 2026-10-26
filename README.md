@@ -1,0 +1,65 @@
+# uncomplicated-docs
+
+A [collage](https://collage.furkanbaytekin.dev/en/) project, scaffolded by
+`collage new --template minimal`.
+
+```
+go mod tidy
+cp .env.example .env.development
+collage dev       # http://localhost:6060, reloading as you edit
+collage build     # -> bin/uncomplicated-docs
+collage export    # -> dist/, static files
+```
+
+`main.go` is one line, `collage.Main(newApp)`: `newApp` builds the application,
+and `collage.Main` runs it the way `collage dev`, `collage export` and a deployed
+binary each need. It loads `.env` (`.env.development` first in development), so
+`os.Getenv` sees those values in `go run .` and the built binary too. Keep
+everything you configure in `newApp`, and both keep working. The guide starts
+at https://collage.furkanbaytekin.dev/en/docs/introduction/.
+
+## Adding to it
+
+`collage add` writes a page, a fragment, an action, a document, a layout, a
+guard, a middleware or a command, and registers it in `routes.go`:
+
+```
+collage add page blog/post          # pages/blog/post.go + fragments/pages/blog/post.go
+collage add fragment blog/sidebar   # fragments/blog/sidebar.go, for a slot
+collage add action blog/comment     # actions/blog.go + actions/funcs/blog.go
+collage add document feed --path /feed.xml --type application/xml
+collage add action blog/like --page blog/post   # attached to that page
+collage add layout panel            # a layout that nests inside the site's
+collage add guard admin             # guards/admin.go, the guard function
+collage add layout panel --guard admin  # a layout that carries it
+collage add page admin/users --layout panel
+collage add middleware loadUser     # run around every request, with app.Use
+collage add command seed            # go run . seed
+```
+
+`collage routes` lists every URL the site answers, with the guards each meets.
+
+A new guard refuses everyone until you write its check. `collage help add` has
+the rest.
+
+## Plugins
+
+What the framework leaves out comes as plugins, each its own module. A few worth
+adding early:
+
+- [collage-htmlcheck](https://github.com/Elagoht/collage-htmlcheck) checks the
+  HTML you render — a missing `alt`, a skipped heading, a link to nothing — over the
+  page in development and in `collage export`'s report.
+- [collage-sitemap](https://github.com/Elagoht/collage-sitemap),
+  [collage-robots](https://github.com/Elagoht/collage-robots) and
+  [collage-feed](https://github.com/Elagoht/collage-feed) for search engines and
+  feed readers.
+- [collage-secure](https://github.com/Elagoht/collage-secure) for security headers,
+  [collage-flash](https://github.com/Elagoht/collage-flash) for a "saved" message
+  after a form, [collage-i18n](https://github.com/Elagoht/collage-i18n) for
+  translations.
+
+`collage plugin add elagoht/sitemap` fetches one, adds it to `plugins.go`, and
+gives it an empty section in `plugins-config.json`, where its settings go;
+`collage plugin del` takes it out again. All of them:
+https://collage.furkanbaytekin.dev/en/docs/plugins/.
