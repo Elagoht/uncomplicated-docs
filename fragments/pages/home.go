@@ -26,10 +26,16 @@ func Home(store *core.FileStore) *collage.Fragment {
 		Build()
 }
 
-const homeBlock collage.InlineHTML = `<h1>Welcome!</h1>
-<ul>
-  {{range .Docs}}<li><a href="{{pageURL "doc" "slug" .Slug}}">{{.Title}}</a></li>
-  {{end}}</ul>`
+const homeBlock collage.InlineHTML = `
+	<h1>Welcome!</h1>
+	<ul>
+		{{range .Docs}}
+			<li>
+				<a href="{{pageURL "doc" "slug" .Slug}}">{{.Title}}</a>
+			</li>
+		{{end}}
+	</ul>
+`
 
 // Reads what home renders: the store's docs, sorted.
 func homeData(store *core.FileStore) collage.Data {
