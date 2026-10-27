@@ -24,6 +24,10 @@ import (
 	toc "github.com/Elagoht/collage-toc"
 	highlight "github.com/Elagoht/collage-highlight"
 	markdown "github.com/Elagoht/collage-markdown"
+	session "github.com/Elagoht/collage-session"
+	validate "github.com/Elagoht/collage-validate"
+	flash "github.com/Elagoht/collage-flash"
+	honeypot "github.com/Elagoht/collage-honeypot"
 )
 
 // plugins are the application's plugins, in order: the first is the outermost
@@ -46,6 +50,10 @@ func plugins() []collage.Plugin {
 		ratelimit.New(ratelimit.Options{}),
 		highlight.New(highlight.Options{}),
 		markdown.New(markdown.Options{}),
+		session.New(session.Options{}),
+		validate.New(validate.Options{}),
+		flash.New(flash.Options{}),
+		honeypot.New(honeypot.Options{}),
 		devtoolbar.New(devtoolbar.Options{}),
 	}
 }

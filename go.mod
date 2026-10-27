@@ -17,15 +17,19 @@ require (
 	github.com/Elagoht/collage-devtoolbar v0.5.0
 	github.com/Elagoht/collage-favicon v0.3.0
 	github.com/Elagoht/collage-feed v0.3.3
+	github.com/Elagoht/collage-flash v0.3.0
 	github.com/Elagoht/collage-health v0.2.1
 	github.com/Elagoht/collage-highlight v0.3.2
+	github.com/Elagoht/collage-honeypot v0.6.0
 	github.com/Elagoht/collage-jsonld v0.6.1
 	github.com/Elagoht/collage-markdown v0.4.0
 	github.com/Elagoht/collage-minimizer v0.2.1
 	github.com/Elagoht/collage-ogimage v0.4.2
 	github.com/Elagoht/collage-ratelimit v0.2.2
 	github.com/Elagoht/collage-secure v0.4.0
+	github.com/Elagoht/collage-session v0.6.0
 	github.com/Elagoht/collage-toc v0.2.2
+	github.com/Elagoht/collage-validate v0.3.0
 )
 
 require (

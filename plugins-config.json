@@ -15,5 +15,9 @@
   "elagoht/ratelimit": {},
   "elagoht/devtoolbar": {},
   "elagoht/highlight": {},
-  "elagoht/markdown": {}
+  "elagoht/markdown": {},
+  "elagoht/session": {},
+  "elagoht/validate": {},
+  "elagoht/flash": {},
+  "elagoht/honeypot": {}
 }
