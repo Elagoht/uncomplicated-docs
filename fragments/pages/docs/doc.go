@@ -31,6 +31,8 @@ func Doc(store *core.FileStore) *collage.Fragment {
 }
 
 const docBlock collage.InlineHTML = `<article>
+  <a href="{{pageURL "home"}}">← Home</a>
+
   <h1>{{.Title}}</h1>
 
 	<span>Written By {{.Author}}</span>
