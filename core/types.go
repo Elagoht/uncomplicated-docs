@@ -23,4 +23,5 @@ type Store interface {
 	Get(slug string) (Doc, bool)
 	Update(slug string, doc Doc) error
 	Delete(slug string) error
+	Sort() []Doc
 }

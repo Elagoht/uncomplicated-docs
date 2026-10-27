@@ -104,24 +104,30 @@ func TestLoadMalformedDoc(t *testing.T) {
 	}
 }
 
-func TestSort(t *testing.T) {
-	docs := []Doc{
-		{Order: 3, Slug: "c", Title: "Third"},
-		{Order: 1, Slug: "b", Title: "Bee"},
-		{Order: 1, Slug: "a", Title: "Aye"},
+func TestSortBreaksTiesByTitle(t *testing.T) {
+	dir := t.TempDir()
+	writeDocFile(t, dir, "1-bee.md", "---\ntitle: Bee\nauthor: A\ndescription: d\ndate: 01/01/2026\n---\n\nbee\n")
+	writeDocFile(t, dir, "1-aye.md", "---\ntitle: Aye\nauthor: A\ndescription: d\ndate: 01/01/2026\n---\n\naye\n")
+	writeDocFile(t, dir, "2-third.md", "---\ntitle: Third\nauthor: A\ndescription: d\ndate: 01/01/2026\n---\n\nthird\n")
+
+	store := NewFileStore(dir)
+	if err := store.Load(); err != nil {
+		t.Fatalf("Load: %v", err)
 	}
 
-	Sort(docs)
-
-	want := []string{"a", "b", "c"}
-	for i, doc := range docs {
-		if doc.Slug != want[i] {
-			t.Fatalf("docs[%d].Slug = %q, want %q", i, doc.Slug, want[i])
+	docs := store.Sort()
+	if len(docs) != 3 {
+		t.Fatalf("Sort has %d docs, want 3", len(docs))
+	}
+	want := []string{"aye", "bee", "third"}
+	for i, slug := range want {
+		if docs[i].Slug != slug {
+			t.Fatalf("docs[%d].Slug = %q, want %q", i, docs[i].Slug, slug)
 		}
 	}
 }
 
-func TestListReturnsDocsInOrder(t *testing.T) {
+func TestListReturnsAllDocs(t *testing.T) {
 	dir := t.TempDir()
 	writeDocFile(t, dir, "2-second.md", "---\ntitle: Second\nauthor: A\ndescription: d\ndate: 01/01/2026\n---\n\nsecond\n")
 	writeDocFile(t, dir, "1-first.md", "---\ntitle: First\nauthor: A\ndescription: d\ndate: 01/06/2026\n---\n\nfirst\n")
@@ -134,6 +140,29 @@ func TestListReturnsDocsInOrder(t *testing.T) {
 	docs := store.List()
 	if len(docs) != 2 {
 		t.Fatalf("List has %d docs, want 2", len(docs))
+	}
+	got := map[string]bool{}
+	for _, doc := range docs {
+		got[doc.Slug] = true
+	}
+	if !got["first"] || !got["second"] {
+		t.Errorf("List slugs = %v, want first and second in any order", got)
+	}
+}
+
+func TestStoreSortReturnsDocsInOrder(t *testing.T) {
+	dir := t.TempDir()
+	writeDocFile(t, dir, "2-second.md", "---\ntitle: Second\nauthor: A\ndescription: d\ndate: 01/01/2026\n---\n\nsecond\n")
+	writeDocFile(t, dir, "1-first.md", "---\ntitle: First\nauthor: A\ndescription: d\ndate: 01/06/2026\n---\n\nfirst\n")
+
+	store := NewFileStore(dir)
+	if err := store.Load(); err != nil {
+		t.Fatalf("Load: %v", err)
+	}
+
+	docs := store.Sort()
+	if len(docs) != 2 {
+		t.Fatalf("Sort has %d docs, want 2", len(docs))
 	}
 	if docs[0].Slug != "first" || docs[1].Slug != "second" {
 		t.Errorf("order = %q, %q; want first, second", docs[0].Slug, docs[1].Slug)

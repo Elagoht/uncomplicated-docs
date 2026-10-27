@@ -74,7 +74,6 @@ func (s *FileStore) List() []Doc {
 	for _, doc := range s.docs {
 		docs = append(docs, doc)
 	}
-	Sort(docs)
 	return docs
 }
 
@@ -126,7 +125,19 @@ func (s *FileStore) Delete(slug string) error {
 	return nil
 }
 
-func Sort(docs []Doc) {
+func (s *FileStore) Sort() []Doc {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	docs := make([]Doc, 0, len(s.docs))
+	for _, doc := range s.docs {
+		docs = append(docs, doc)
+	}
+	sortDocs(docs)
+	return docs
+}
+
+func sortDocs(docs []Doc) {
 	sort.Slice(docs, func(i, j int) bool {
 		if docs[i].Order != docs[j].Order {
 			return docs[i].Order < docs[j].Order
