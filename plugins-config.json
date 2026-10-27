@@ -14,5 +14,6 @@
   "elagoht/accesslog": {},
   "elagoht/ratelimit": {},
   "elagoht/devtoolbar": {},
-  "elagoht/highlight": {}
+  "elagoht/highlight": {},
+  "elagoht/markdown": {}
 }

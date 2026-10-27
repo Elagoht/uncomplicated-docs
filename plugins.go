@@ -23,6 +23,7 @@ import (
 	sitemap "github.com/Elagoht/collage-sitemap"
 	toc "github.com/Elagoht/collage-toc"
 	highlight "github.com/Elagoht/collage-highlight"
+	markdown "github.com/Elagoht/collage-markdown"
 )
 
 // plugins are the application's plugins, in order: the first is the outermost
@@ -44,6 +45,7 @@ func plugins() []collage.Plugin {
 		accesslog.New(accesslog.Options{}),
 		ratelimit.New(ratelimit.Options{}),
 		highlight.New(highlight.Options{}),
+		markdown.New(markdown.Options{}),
 		devtoolbar.New(devtoolbar.Options{}),
 	}
 }

@@ -39,7 +39,7 @@ const docBlock collage.InlineHTML = `<article>
 
 	<small>{{.Description}}</small>
 
-	{{safeHTML .Content}}
+	{{markdown .Content}}
 
 	{{if or .PrevSlug .NextSlug}}<nav>
 		{{if .PrevSlug}}<a href="{{pageURL "doc" "slug" .PrevSlug}}" rel="prev">← {{.PrevTitle}}</a>{{end}}
@@ -66,7 +66,7 @@ func docData(store *core.FileStore) collage.Data {
 			Author:      document.Author,
 			Description: document.Description,
 			Date:        document.Date,
-			Content:     document.HTML(),
+			Content:     document.Content,
 		}
 		if prev, ok := store.Prev(slug); ok {
 			view.PrevTitle, view.PrevSlug = prev.Title, prev.Slug
