@@ -16,6 +16,10 @@ type docView struct {
 	Description string
 	Date        time.Time
 	Content     string
+	PrevTitle   string
+	PrevSlug    string
+	NextTitle   string
+	NextSlug    string
 }
 
 // Returns the doc page's content.
@@ -34,6 +38,11 @@ const docBlock collage.InlineHTML = `<article>
 	<small>{{.Description}}</small>
 
 	{{safeHTML .Content}}
+
+	{{if or .PrevSlug .NextSlug}}<nav>
+		{{if .PrevSlug}}<a href="{{pageURL "doc" "slug" .PrevSlug}}" rel="prev">← {{.PrevTitle}}</a>{{end}}
+		{{if .NextSlug}}<a href="{{pageURL "doc" "slug" .NextSlug}}" rel="next">{{.NextTitle}} →</a>{{end}}
+	</nav>{{end}}
 </article>`
 
 // Reads what this page renders. What it reads through — a service, a store — comes
@@ -43,18 +52,26 @@ func docData(store *core.FileStore) collage.Data {
 		_ context.Context,
 		rc *collage.RenderContext,
 	) (docView, error) {
-		document, ok := store.Get(rc.Param("slug"))
+		slug := rc.Param("slug")
+		document, ok := store.Get(slug)
 		if !ok {
 			return docView{}, fmt.Errorf("collage: document not found: %w", collage.ErrNotFound)
 		}
 
 		rc.HoistTitle(document.Title)
-		return docView{
+		view := docView{
 			Title:       document.Title,
 			Author:      document.Author,
 			Description: document.Description,
 			Date:        document.Date,
 			Content:     document.HTML(),
-		}, nil
+		}
+		if prev, ok := store.Prev(slug); ok {
+			view.PrevTitle, view.PrevSlug = prev.Title, prev.Slug
+		}
+		if next, ok := store.Next(slug); ok {
+			view.NextTitle, view.NextSlug = next.Title, next.Slug
+		}
+		return view, nil
 	})
 }

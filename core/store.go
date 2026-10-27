@@ -125,6 +125,37 @@ func (s *FileStore) Delete(slug string) error {
 	return nil
 }
 
+func (s *FileStore) Prev(slug string) (Doc, bool) {
+	return s.neighbor(slug, -1)
+}
+
+func (s *FileStore) Next(slug string) (Doc, bool) {
+	return s.neighbor(slug, 1)
+}
+
+// neighbor returns the doc step places before or after slug in docs' order.
+func (s *FileStore) neighbor(slug string, step int) (Doc, bool) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	docs := make([]Doc, 0, len(s.docs))
+	for _, doc := range s.docs {
+		docs = append(docs, doc)
+	}
+	sortDocs(docs)
+
+	for i, doc := range docs {
+		if doc.Slug != slug {
+			continue
+		}
+		if j := i + step; j >= 0 && j < len(docs) {
+			return docs[j], true
+		}
+		return Doc{}, false
+	}
+	return Doc{}, false
+}
+
 func (s *FileStore) Sort() []Doc {
 	s.mu.RLock()
 	defer s.mu.RUnlock()

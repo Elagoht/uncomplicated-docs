@@ -24,4 +24,6 @@ type Store interface {
 	Update(slug string, doc Doc) error
 	Delete(slug string) error
 	Sort() []Doc
+	Prev(slug string) (Doc, bool)
+	Next(slug string) (Doc, bool)
 }

@@ -169,6 +169,52 @@ func TestStoreSortReturnsDocsInOrder(t *testing.T) {
 	}
 }
 
+func TestPrevReturnsDocBefore(t *testing.T) {
+	dir := t.TempDir()
+	writeDocFile(t, dir, "1-first.md", "---\ntitle: First\nauthor: A\ndescription: d\ndate: 01/01/2026\n---\n\nfirst\n")
+	writeDocFile(t, dir, "2-second.md", "---\ntitle: Second\nauthor: A\ndescription: d\ndate: 01/01/2026\n---\n\nsecond\n")
+	writeDocFile(t, dir, "3-third.md", "---\ntitle: Third\nauthor: A\ndescription: d\ndate: 01/01/2026\n---\n\nthird\n")
+
+	store := NewFileStore(dir)
+	if err := store.Load(); err != nil {
+		t.Fatalf("Load: %v", err)
+	}
+
+	prev, ok := store.Prev("second")
+	if !ok || prev.Slug != "first" {
+		t.Errorf("Prev(\"second\") = %q, ok = %v; want first", prev.Slug, ok)
+	}
+	if _, ok := store.Prev("first"); ok {
+		t.Error(`Prev("first"): the first doc has no prev, got one`)
+	}
+	if _, ok := store.Prev("ghost"); ok {
+		t.Error(`Prev("ghost"): unknown slug, got a prev`)
+	}
+}
+
+func TestNextReturnsDocAfter(t *testing.T) {
+	dir := t.TempDir()
+	writeDocFile(t, dir, "1-first.md", "---\ntitle: First\nauthor: A\ndescription: d\ndate: 01/01/2026\n---\n\nfirst\n")
+	writeDocFile(t, dir, "2-second.md", "---\ntitle: Second\nauthor: A\ndescription: d\ndate: 01/01/2026\n---\n\nsecond\n")
+	writeDocFile(t, dir, "3-third.md", "---\ntitle: Third\nauthor: A\ndescription: d\ndate: 01/01/2026\n---\n\nthird\n")
+
+	store := NewFileStore(dir)
+	if err := store.Load(); err != nil {
+		t.Fatalf("Load: %v", err)
+	}
+
+	next, ok := store.Next("second")
+	if !ok || next.Slug != "third" {
+		t.Errorf("Next(\"second\") = %q, ok = %v; want third", next.Slug, ok)
+	}
+	if _, ok := store.Next("third"); ok {
+		t.Error(`Next("third"): the last doc has no next, got one`)
+	}
+	if _, ok := store.Next("ghost"); ok {
+		t.Error(`Next("ghost"): unknown slug, got a next`)
+	}
+}
+
 func TestSaveWritesFileAndMemory(t *testing.T) {
 	dir := t.TempDir()
 	store := NewFileStore(dir)
