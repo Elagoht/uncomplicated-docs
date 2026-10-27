@@ -2,6 +2,7 @@ package main
 
 import (
 	"uncomplicated-docs/pages"
+	docspages "uncomplicated-docs/pages/docs"
 
 	"github.com/Elagoht/collage/pkg/collage"
 )
@@ -10,5 +11,6 @@ import (
 func register(app *collage.App) error {
 	return app.Register(
 		pages.Home(),
+		docspages.Doc(),
 	)
 }
