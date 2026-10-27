@@ -13,7 +13,6 @@ import (
 	favicon "github.com/Elagoht/collage-favicon"
 	feed "github.com/Elagoht/collage-feed"
 	health "github.com/Elagoht/collage-health"
-	highlight "github.com/Elagoht/collage-highlight"
 	jsonld "github.com/Elagoht/collage-jsonld"
 	meta "github.com/Elagoht/collage-meta"
 	minimizer "github.com/Elagoht/collage-minimizer"
@@ -43,7 +42,6 @@ func plugins() []collage.Plugin {
 		minimizer.New(minimizer.Options{}),
 		accesslog.New(accesslog.Options{}),
 		ratelimit.New(ratelimit.Options{}),
-		highlight.New(highlight.Options{}),
 		devtoolbar.New(devtoolbar.Options{}),
 	}
 }

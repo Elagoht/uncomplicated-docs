@@ -13,6 +13,5 @@
   "elagoht/minimizer": {},
   "elagoht/accesslog": {},
   "elagoht/ratelimit": {},
-  "elagoht/devtoolbar": {},
-  "elagoht/highlight": {}
+  "elagoht/devtoolbar": {}
 }
