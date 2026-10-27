@@ -1,6 +1,7 @@
 package main
 
 import (
+	"uncomplicated-docs/core"
 	"uncomplicated-docs/pages"
 	docspages "uncomplicated-docs/pages/docs"
 
@@ -8,9 +9,9 @@ import (
 )
 
 // Registers every page, document and action to app. A new route goes here.
-func register(app *collage.App) error {
+func register(app *collage.App, store *core.FileStore) error {
 	return app.Register(
-		pages.Home(),
-		docspages.Doc(),
+		pages.Home(store),
+		docspages.Doc(store),
 	)
 }

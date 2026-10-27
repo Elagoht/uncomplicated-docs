@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"time"
+	"uncomplicated-docs/core"
 
 	"github.com/Elagoht/collage/pkg/collage"
 )
@@ -12,6 +13,12 @@ func main() {
 }
 
 func newApp(env collage.Env) (*collage.App, error) {
+	store := core.NewFileStore("docs")
+	err := store.Load()
+	if err != nil {
+		return nil, err
+	}
+
 	pluginConfig, err := env.PluginConfig(files)
 	if err != nil {
 		return nil, err
@@ -42,7 +49,7 @@ func newApp(env collage.Env) (*collage.App, error) {
 		return nil, err
 	}
 
-	if err := register(app); err != nil {
+	if err := register(app, store); err != nil {
 		return nil, err
 	}
 
